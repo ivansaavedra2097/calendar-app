@@ -3,7 +3,7 @@ import './CalendarModal.css'
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useState } from 'react';
-import { addHours } from 'date-fns';
+import { addHours, differenceInSeconds } from 'date-fns';
 import es from 'date-fns/locale/es'
 
 registerLocale('es', es)
@@ -54,6 +54,24 @@ export const CalendarModal = () => {
         }))
     }
 
+    const onSubmit = (e) => {
+        e.preventDefault()
+        const difference = differenceInSeconds( formState.end, formState.start )
+        console.log({ difference })
+        if( isNaN( difference ) || difference <=0  ) {
+            console.log('Error en fechas')
+            return;
+        }
+
+        if( formState.title.trim().length === 0 ) return 
+
+        console.log({ formState })
+
+        //TODO
+        //cerrar modal
+        //Remover errores en pantalla
+    }
+
     return (
         <Modal
             isOpen={true}
@@ -65,18 +83,19 @@ export const CalendarModal = () => {
         >
             <h1> Nuevo evento </h1>
             <hr />
-            <form className="container">
+            <form className="container" onSubmit={onSubmit}>
 
                 <div className="form-group mb-2 d-flex flex-column">
                     <label className='form-label'>Fecha y hora inicio</label>
                     <DatePicker
                         selected={formState.start}
                         className='form-control'
-                        onChange={onDateChange}
+                        onChange={(e) => onDateChange(e,'start')}
                         dateFormat='Pp'
                         showTimeSelect
                         locale="es"
                         timeCaption='Hora'
+                        value={formState.start}
                     />
                 </div>
 
@@ -85,11 +104,12 @@ export const CalendarModal = () => {
                     <DatePicker
                         selected={formState.end}
                         className='form-control'
-                        onChange={onDateChange}
+                        onChange={(e) => onDateChange(e,'end')}
                         dateFormat='Pp'
                         showTimeSelect
                         locale="es"
                         timeCaption='Hora'
+                        value={formState.end}
                     />
                 </div>
 
