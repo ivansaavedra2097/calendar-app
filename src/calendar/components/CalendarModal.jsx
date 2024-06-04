@@ -23,10 +23,6 @@ const customStyles = {
     },
 };
 
-const onCloseModal = () => {
-    console.log('cerrando modal')
-}
-
 Modal.setAppElement('#root')
 
 const initialFormValues = {
@@ -43,7 +39,7 @@ export const CalendarModal = () => {
 
     const [formState, setFormState] = useState(initialFormValues)
 
-    const { activeEvent } = useCalendarStore()
+    const { activeEvent, startSavingEvent } = useCalendarStore()
     
 
     const titleClass = useMemo(() => {
@@ -58,7 +54,7 @@ export const CalendarModal = () => {
       if( activeEvent !== null ) {
         setFormState({ ...activeEvent })
       }
-     }, [third])
+     }, [activeEvent])
     
 
     const onInputChange = e => {
@@ -93,6 +89,9 @@ export const CalendarModal = () => {
         console.log({ formState })
 
         //TODO
+        startSavingEvent( formState )
+        closeDateModal()
+        setFormSubmited(false)
         //cerrar modal
         //Remover errores en pantalla
     }
